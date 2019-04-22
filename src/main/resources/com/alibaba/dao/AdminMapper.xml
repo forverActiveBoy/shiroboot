@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alibaba.dao.AdminDao">
+    <!-- Admin的resultMap,column是给数据库列起的别名,它对应property类的属性-->
+    <resultMap id="result_Admin_Map" type="com.alibaba.entity.Admin">
+        <id column="id" property="id" />
+        <result column="username" property="username" />
+        <result column="password" property="password" />
+        <result column="beforepassword" property="beforepassword" />
+        <result column="passwordsalt" property="passwordsalt" />
+    </resultMap>
+
+    <!-- 数据库中表名为:shiro_admin的列名,as前是数据库的列明,as后是列的别名用于映射成实体类中的属性,需要注意的是别名必须与resultMap中的column别名一致 -->
+    <sql id="shiro_admin_Column">
+        shiro_admin.id as id
+        ,shiro_admin.username as username
+        ,shiro_admin.password as password
+        ,shiro_admin.beforepassword as beforepassword
+        ,shiro_admin.passwordsalt as passwordsalt
+    </sql>
+
+    <!--获得类名为:Admin对应的数据库表的数据总行数 -->
+    <select id="getAdminRowCount" resultType="java.lang.Long">
+        select count(id) from shiro_admin
+    </select>
+    <!-- 获得类名为:Admin对应数据库中表的数据集合 -->
+    <select id="selectAdmin" resultMap="result_Admin_Map">
+        select 
+        <include refid="shiro_admin_Column" /> 
+        from shiro_admin
+    </select> 
+
+    <!-- 获得一个Admin对象,以参数Admin对象中不为空的属性作为条件进行查询-->
+    <select id="selectAdminByObj" parameterType="com.alibaba.entity.Admin" resultMap="result_Admin_Map">
+        select 
+            <include refid="shiro_admin_Column" /> 
+        from shiro_admin
+        <where>
+            <if test="passwordsalt != null "> and shiro_admin.passwordsalt = #{passwordsalt}</if>
+            <if test="beforepassword != null "> and shiro_admin.beforepassword = #{beforepassword}</if>
+            <if test="password != null "> and shiro_admin.password = #{password}</if>
+            <if test="username != null "> and shiro_admin.username = #{username}</if>
+            <if test="id != null "> and shiro_admin.id = #{id}</if>
+        </where>
+    </select> 
+
+    <!-- 通过Admin的id获得对应数据库中表的数据对象-->
+    <select id="selectAdminById" parameterType="java.lang.String" resultMap="result_Admin_Map">
+        select 
+            <include refid="shiro_admin_Column" /> 
+        from shiro_admin
+        where shiro_admin.id = #{id}
+    </select> 
+
+    <!-- 将Admin插入到对应数据库的表中,包括属性值为null的数据-->
+
+    <insert id="insertAdmin" parameterType="com.alibaba.entity.Admin">
+        insert into shiro_admin(id,username,password,beforepassword,passwordsalt) 
+        values(#{id},#{username},#{password},#{beforepassword},#{passwordsalt})
+    </insert>
+
+    <!-- 将Admin中属性值不为null的数据,插入到对应数据库的表中-->
+    <insert id="insertNonEmptyAdmin" parameterType="com.alibaba.entity.Admin">
+        insert into shiro_admin
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="username != null">username,</if>
+            <if test="password != null">password,</if>
+            <if test="beforepassword != null">beforepassword,</if>
+            <if test="passwordsalt != null">passwordsalt,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id},</if>
+            <if test="username != null"> #{username},</if>
+            <if test="password != null"> #{password},</if>
+            <if test="beforepassword != null"> #{beforepassword},</if>
+            <if test="passwordsalt != null"> #{passwordsalt},</if>
+        </trim>
+    </insert>
+
+    <!-- 通过Admin的id将数据库表中对应的数据删除-->
+    <delete id="deleteAdminById" parameterType="java.lang.String">
+        delete from shiro_admin
+        where id = #{id}
+    </delete>
+
+    <!-- 通过Admin的id将Admin的数据更新到数据库中对应的表,包括值null的数据-->
+    <update id="updateAdminById" parameterType="com.alibaba.entity.Admin">
+        update shiro_admin set
+            username=#{username}
+            ,password=#{password}
+            ,beforepassword=#{beforepassword}
+            ,passwordsalt=#{passwordsalt}
+        where id=#{id}
+    </update>
+
+    <!-- 通过Admin的id将Admin中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyAdminById" parameterType="com.alibaba.entity.Admin">
+        update shiro_admin
+        <set>
+            <if test="username != null">
+                username=#{username},
+            </if>
+            <if test="password != null">
+                password=#{password},
+            </if>
+            <if test="beforepassword != null">
+                beforepassword=#{beforepassword},
+            </if>
+            <if test="passwordsalt != null">
+                passwordsalt=#{passwordsalt},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <select id="selectByUserName" resultMap="result_Admin_Map">
+        select
+        <include refid="shiro_admin_Column" />
+        from shiro_admin
+        where username = #{userName}
+    </select>
+
+</mapper>

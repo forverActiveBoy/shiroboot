@@ -1,0 +1,29 @@
+server:
+  servlet:
+    context-path: /
+  port: 8080
+  tomcat:
+    uri-encoding: utf-8
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.242.128:3306/test?autoReconnect=true&useUnicode=yes&characterEncoding=UTF8
+    username: root
+    password: 1234
+
+  mvc:
+    view:
+      prefix: /
+      suffix: .jsp
+
+mybatis:
+  mapper-locations: classpath:com/alibaba/dao/*Mapper.xml
+pagehelper:
+  auto-dialect: mysql
+logging:
+  level:
+  #指定精确的dao接口路径：日志级别
+    com.alibaba.dao: debug
+
