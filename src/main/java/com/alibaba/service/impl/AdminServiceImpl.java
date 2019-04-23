@@ -3,6 +3,7 @@ package com.alibaba.service.impl;
 import com.alibaba.dao.AdminDao;
 import com.alibaba.entity.Admin;
 import com.alibaba.service.AdminService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,8 @@ import java.util.List;
 public class AdminServiceImpl implements AdminService {
     @Autowired
     private AdminDao adminDao;
+    //  采用shiro注解授权
+    @RequiresPermissions({"admin:select"})
     @Override
     public long getAdminRowCount(){
         return adminDao.getAdminRowCount();

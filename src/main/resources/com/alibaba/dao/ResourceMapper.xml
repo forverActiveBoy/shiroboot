@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alibaba.dao.ResourceDao">
+    <!-- Resource的resultMap,column是给数据库列起的别名,它对应property类的属性-->
+    <resultMap id="result_Resource_Map" type="com.alibaba.entity.Resource">
+        <id column="id" property="id" />
+        <result column="resname" property="resname" />
+        <result column="resurl" property="resurl" />
+        <result column="restype" property="restype" />
+        <result column="rescode" property="rescode" />
+        <result column="parent_id" property="parentId" />
+    </resultMap>
+
+    <!-- 数据库中表名为:shiro_resource的列名,as前是数据库的列明,as后是列的别名用于映射成实体类中的属性,需要注意的是别名必须与resultMap中的column别名一致 -->
+    <sql id="shiro_resource_Column">
+        shiro_resource.id as id
+        ,shiro_resource.resname as resname
+        ,shiro_resource.resurl as resurl
+        ,shiro_resource.restype as restype
+        ,shiro_resource.rescode as rescode
+        ,shiro_resource.parent_id as parent_id
+    </sql>
+
+    <!--获得类名为:Resource对应的数据库表的数据总行数 -->
+    <select id="getResourceRowCount" resultType="java.lang.Long">
+        select count(id) from shiro_resource
+    </select>
+    <!-- 获得类名为:Resource对应数据库中表的数据集合 -->
+    <select id="selectResource" resultMap="result_Resource_Map">
+        select 
+        <include refid="shiro_resource_Column" /> 
+        from shiro_resource
+    </select> 
+
+    <!-- 获得一个Resource对象,以参数Resource对象中不为空的属性作为条件进行查询-->
+    <select id="selectResourceByObj" parameterType="com.alibaba.entity.Resource" resultMap="result_Resource_Map">
+        select 
+            <include refid="shiro_resource_Column" /> 
+        from shiro_resource
+        <where>
+            <if test="parentId != null "> and shiro_resource.parent_id = #{parentId}</if>
+            <if test="rescode != null "> and shiro_resource.rescode = #{rescode}</if>
+            <if test="restype != null "> and shiro_resource.restype = #{restype}</if>
+            <if test="resurl != null "> and shiro_resource.resurl = #{resurl}</if>
+            <if test="resname != null "> and shiro_resource.resname = #{resname}</if>
+            <if test="id != null "> and shiro_resource.id = #{id}</if>
+        </where>
+    </select> 
+
+    <!-- 通过Resource的id获得对应数据库中表的数据对象-->
+    <select id="selectResourceById" parameterType="java.lang.Integer" resultMap="result_Resource_Map">
+        select 
+            <include refid="shiro_resource_Column" /> 
+        from shiro_resource
+        where shiro_resource.id = #{id}
+    </select> 
+
+    <!-- 将Resource插入到对应数据库的表中,包括属性值为null的数据-->
+
+    <insert id="insertResource" parameterType="com.alibaba.entity.Resource">
+        insert into shiro_resource(id,resname,resurl,restype,rescode,parent_id) 
+        values(#{id},#{resname},#{resurl},#{restype},#{rescode},#{parentId})
+    </insert>
+
+    <!-- 将Resource中属性值不为null的数据,插入到对应数据库的表中-->
+    <insert id="insertNonEmptyResource" parameterType="com.alibaba.entity.Resource">
+        insert into shiro_resource
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="resname != null">resname,</if>
+            <if test="resurl != null">resurl,</if>
+            <if test="restype != null">restype,</if>
+            <if test="rescode != null">rescode,</if>
+            <if test="parentId != null">parent_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id},</if>
+            <if test="resname != null"> #{resname},</if>
+            <if test="resurl != null"> #{resurl},</if>
+            <if test="restype != null"> #{restype},</if>
+            <if test="rescode != null"> #{rescode},</if>
+            <if test="parentId != null"> #{parentId},</if>
+        </trim>
+    </insert>
+
+    <!-- 通过Resource的id将数据库表中对应的数据删除-->
+    <delete id="deleteResourceById" parameterType="java.lang.Integer">
+        delete from shiro_resource
+        where id = #{id}
+    </delete>
+
+    <!-- 通过Resource的id将Resource的数据更新到数据库中对应的表,包括值null的数据-->
+    <update id="updateResourceById" parameterType="com.alibaba.entity.Resource">
+        update shiro_resource set
+            resname=#{resname}
+            ,resurl=#{resurl}
+            ,restype=#{restype}
+            ,rescode=#{rescode}
+            ,parent_id=#{parentId}
+        where id=#{id}
+    </update>
+
+    <!-- 通过Resource的id将Resource中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyResourceById" parameterType="com.alibaba.entity.Resource">
+        update shiro_resource
+        <set>
+            <if test="resname != null">
+                resname=#{resname},
+            </if>
+            <if test="resurl != null">
+                resurl=#{resurl},
+            </if>
+            <if test="restype != null">
+                restype=#{restype},
+            </if>
+            <if test="rescode != null">
+                rescode=#{rescode},
+            </if>
+            <if test="parentId != null">
+                parent_id=#{parentId},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+</mapper>

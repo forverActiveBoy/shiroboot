@@ -2,6 +2,7 @@ package com.alibaba.config;
 
 import com.alibaba.realm.MyRealm;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.context.annotation.Bean;
@@ -67,6 +68,17 @@ public class ShiroConfig {
         hashedCredentialsMatcher.setHashAlgorithmName("md5");
         hashedCredentialsMatcher.setHashIterations(1024);
         return hashedCredentialsMatcher;
+    }
+
+    /**
+     *shiro注解授权的时候，开启注解授权
+     * @return
+     */
+    @Bean
+    public AuthorizationAttributeSourceAdvisor getAuthorizationAttributeSourceAdvisor(){
+        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
+        authorizationAttributeSourceAdvisor.setSecurityManager(getSecurityManager());
+        return authorizationAttributeSourceAdvisor;
     }
 
 
