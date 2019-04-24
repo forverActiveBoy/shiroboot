@@ -53,7 +53,17 @@
             <include refid="shiro_resource_Column" /> 
         from shiro_resource
         where shiro_resource.id = #{id}
-    </select> 
+    </select>
+
+    <!--根据角色名字，查询该角色下所有的资源id集合-->
+    <select id="selectResCodeByResId" resultType="String">
+        select rescode
+        from shiro_resource
+        where id in
+        <foreach collection="list" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
 
     <!-- 将Resource插入到对应数据库的表中,包括属性值为null的数据-->
 

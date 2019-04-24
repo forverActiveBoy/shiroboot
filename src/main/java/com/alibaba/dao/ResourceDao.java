@@ -1,6 +1,8 @@
 package com.alibaba.dao;
 import com.alibaba.entity.Resource;
 import java.util.List;
+import java.util.Set;
+
 public interface ResourceDao{
 	/**
 	 * 获得Resource数据的总行数
@@ -54,4 +56,11 @@ public interface ResourceDao{
 	 * @return
 	 */
     int updateNonEmptyResourceById(Resource enti);
+
+	/**
+	 * @function 根据资源id查询权限集合
+	 * selectResCodeByResId
+	 *
+	 */
+	Set<String> selectResCodeByResId(List<Integer> resIds);
 }

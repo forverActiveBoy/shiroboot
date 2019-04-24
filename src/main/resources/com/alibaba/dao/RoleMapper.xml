@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alibaba.dao.RoleDao">
+    <!-- Role的resultMap,column是给数据库列起的别名,它对应property类的属性-->
+    <resultMap id="result_Role_Map" type="com.alibaba.entity.Role">
+        <id column="id" property="id" />
+        <result column="rolename" property="rolename" />
+    </resultMap>
+
+    <!-- 数据库中表名为:shiro_role的列名,as前是数据库的列明,as后是列的别名用于映射成实体类中的属性,需要注意的是别名必须与resultMap中的column别名一致 -->
+    <sql id="shiro_role_Column">
+        shiro_role.id as id
+        ,shiro_role.rolename as rolename
+    </sql>
+
+    <!--获得类名为:Role对应的数据库表的数据总行数 -->
+    <select id="getRoleRowCount" resultType="java.lang.Long">
+        select count(id) from shiro_role
+    </select>
+    <!-- 获得类名为:Role对应数据库中表的数据集合 -->
+    <select id="selectRole" resultMap="result_Role_Map">
+        select 
+        <include refid="shiro_role_Column" /> 
+        from shiro_role
+    </select> 
+
+    <!-- 获得一个Role对象,以参数Role对象中不为空的属性作为条件进行查询-->
+    <select id="selectRoleByObj" parameterType="com.alibaba.entity.Role" resultMap="result_Role_Map">
+        select 
+            <include refid="shiro_role_Column" /> 
+        from shiro_role
+        <where>
+            <if test="rolename != null "> and shiro_role.rolename = #{rolename}</if>
+            <if test="id != null "> and shiro_role.id = #{id}</if>
+        </where>
+    </select> 
+
+    <!-- 通过Role的id获得对应数据库中表的数据对象-->
+    <select id="selectRoleById" parameterType="java.lang.Integer" resultMap="result_Role_Map">
+        select 
+            <include refid="shiro_role_Column" /> 
+        from shiro_role
+        where shiro_role.id = #{id}
+    </select> 
+
+    <!-- 将Role插入到对应数据库的表中,包括属性值为null的数据-->
+
+    <insert id="insertRole" parameterType="com.alibaba.entity.Role">
+        insert into shiro_role(id,rolename) 
+        values(#{id},#{rolename})
+    </insert>
+
+    <!-- 将Role中属性值不为null的数据,插入到对应数据库的表中-->
+    <insert id="insertNonEmptyRole" parameterType="com.alibaba.entity.Role">
+        insert into shiro_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="rolename != null">rolename,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id},</if>
+            <if test="rolename != null"> #{rolename},</if>
+        </trim>
+    </insert>
+
+    <!-- 通过Role的id将数据库表中对应的数据删除-->
+    <delete id="deleteRoleById" parameterType="java.lang.Integer">
+        delete from shiro_role
+        where id = #{id}
+    </delete>
+
+    <!-- 通过Role的id将Role的数据更新到数据库中对应的表,包括值null的数据-->
+    <update id="updateRoleById" parameterType="com.alibaba.entity.Role">
+        update shiro_role set
+            rolename=#{rolename}
+        where id=#{id}
+    </update>
+
+    <!-- 通过Role的id将Role中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyRoleById" parameterType="com.alibaba.entity.Role">
+        update shiro_role
+        <set>
+            <if test="rolename != null">
+                rolename=#{rolename},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+</mapper>
