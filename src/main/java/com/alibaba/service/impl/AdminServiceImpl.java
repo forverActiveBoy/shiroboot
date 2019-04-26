@@ -53,13 +53,4 @@ public class AdminServiceImpl implements AdminService {
     public int updateNonEmptyAdminById(Admin enti){
         return adminDao.updateNonEmptyAdminById(enti);
     }
-
-    public AdminDao getAdminDao() {
-        return this.adminDao;
-    }
-
-    public void setAdminDao(AdminDao adminDao) {
-        this.adminDao = adminDao;
-    }
-
 }

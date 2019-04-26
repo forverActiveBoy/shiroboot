@@ -12,11 +12,8 @@ spring:
     url: jdbc:mysql://192.168.2.173:3306/cheweibao?autoReconnect=true&useUnicode=yes&characterEncoding=UTF8
     username: admin
     password: admin1234
-
-  mvc:
-    view:
-      prefix: /
-      suffix: .jsp
+  messages:
+    basename: i18n/admin/messages,i18n/common/messages
 
 mybatis:
   mapper-locations: classpath:com/alibaba/dao/*Mapper.xml

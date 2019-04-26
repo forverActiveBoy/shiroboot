@@ -52,7 +52,6 @@ public class MyRealm extends AuthorizingRealm {
         // 2. 如果存在 返回 info  如果不存在 返回null
         return null;
     }
-
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         //  获取该系统登录账号
