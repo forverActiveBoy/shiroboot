@@ -11,9 +11,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @MapperScan("com.alibaba.dao")
 @SpringBootApplication
 public class ShirobootApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(ShirobootApplication.class, args);
 	}
-
 }

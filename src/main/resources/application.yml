@@ -5,6 +5,9 @@ server:
   tomcat:
     uri-encoding: utf-8
 
+
+uploadPath: F:\a
+
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
