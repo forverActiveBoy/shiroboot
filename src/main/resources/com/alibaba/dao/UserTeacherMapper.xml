@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.alibaba.dao.UserTeacherDao">
+    <!-- UserTeacher的resultMap,column是给数据库列起的别名,它对应property类的属性-->
+    <resultMap id="result_UserTeacher_Map" type="com.alibaba.entity.UserTeacher">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="teacher_id" property="teacherId" />
+    </resultMap>
+
+    <!-- 数据库中表名为:dxkj_user_teacher的列名,as前是数据库的列明,as后是列的别名用于映射成实体类中的属性,需要注意的是别名必须与resultMap中的column别名一致 -->
+    <sql id="dxkj_user_teacher_Column">
+        dxkj_user_teacher.id as id
+        ,dxkj_user_teacher.user_id as user_id
+        ,dxkj_user_teacher.teacher_id as teacher_id
+    </sql>
+
+    <!--获得类名为:UserTeacher对应的数据库表的数据总行数 -->
+    <select id="getUserTeacherRowCount" resultType="java.lang.Long">
+        select count(id) from dxkj_user_teacher
+    </select>
+    <!-- 获得类名为:UserTeacher对应数据库中表的数据集合 -->
+    <select id="selectUserTeacher" resultMap="result_UserTeacher_Map">
+        select 
+        <include refid="dxkj_user_teacher_Column" /> 
+        from dxkj_user_teacher
+    </select> 
+
+    <!-- 获得一个UserTeacher对象,以参数UserTeacher对象中不为空的属性作为条件进行查询-->
+    <select id="selectUserTeacherByObj" parameterType="com.alibaba.entity.UserTeacher" resultMap="result_UserTeacher_Map">
+        select 
+            <include refid="dxkj_user_teacher_Column" /> 
+        from dxkj_user_teacher
+        <where>
+            <if test="teacherId != null "> and dxkj_user_teacher.teacher_id = #{teacherId}</if>
+            <if test="userId != null "> and dxkj_user_teacher.user_id = #{userId}</if>
+            <if test="id != null "> and dxkj_user_teacher.id = #{id}</if>
+        </where>
+    </select> 
+
+    <!-- 通过UserTeacher的id获得对应数据库中表的数据对象-->
+    <select id="selectUserTeacherById" parameterType="java.lang.Long" resultMap="result_UserTeacher_Map">
+        select 
+            <include refid="dxkj_user_teacher_Column" /> 
+        from dxkj_user_teacher
+        where dxkj_user_teacher.id = #{id}
+    </select> 
+
+    <!-- 将UserTeacher插入到对应数据库的表中,包括属性值为null的数据-->
+
+    <insert id="insertUserTeacher" parameterType="com.alibaba.entity.UserTeacher">
+        insert into dxkj_user_teacher(id,user_id,teacher_id) 
+        values(#{id},#{userId},#{teacherId})
+    </insert>
+
+    <!-- 将UserTeacher中属性值不为null的数据,插入到对应数据库的表中-->
+    <insert id="insertNonEmptyUserTeacher" parameterType="com.alibaba.entity.UserTeacher">
+        insert into dxkj_user_teacher
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="teacherId != null">teacher_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null"> #{id},</if>
+            <if test="userId != null"> #{userId},</if>
+            <if test="teacherId != null"> #{teacherId},</if>
+        </trim>
+    </insert>
+
+    <!-- 通过UserTeacher的id将数据库表中对应的数据删除-->
+    <delete id="deleteUserTeacherById" parameterType="java.lang.Long">
+        delete from dxkj_user_teacher
+        where id = #{id}
+    </delete>
+
+    <!-- 通过UserTeacher的id将UserTeacher的数据更新到数据库中对应的表,包括值null的数据-->
+    <update id="updateUserTeacherById" parameterType="com.alibaba.entity.UserTeacher">
+        update dxkj_user_teacher set
+            user_id=#{userId}
+            ,teacher_id=#{teacherId}
+        where id=#{id}
+    </update>
+
+    <!-- 通过UserTeacher的id将UserTeacher中属性值不为null的数据更新到数据库对应的表中-->
+    <update id="updateNonEmptyUserTeacherById" parameterType="com.alibaba.entity.UserTeacher">
+        update dxkj_user_teacher
+        <set>
+            <if test="userId != null">
+                user_id=#{userId},
+            </if>
+            <if test="teacherId != null">
+                teacher_id=#{teacherId},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+</mapper>
